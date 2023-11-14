@@ -1,7 +1,202 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Lottery</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Lottery</h1>
 
-Welcome to your new app.
+<p>Add lottery participants below:</p>
+<p>Example:
+<pre>
+1,Bilbo
+2,Frodo
+</pre>
+</p>
+
+<p>
+    <label for="participants">Participants:</label>
+    <br />
+    <InputTextArea id="participants" @bind-Value="Participants" rows="20" style="width: 500px;" />
+</p>
+
+<button @onclick="RunLottery">Run Lottery</button>
+
+<p>
+    @foreach (var line in Results)
+    {
+        @line
+        <br />
+    }
+</p>
+
+@code
+{
+    private string Participants { get; set; } = string.Empty;
+    private List<string> Results { get; set; } = new List<string>();
+
+    private void RunLottery()
+    {
+        Results = Run(Participants);
+    }
+
+    private List<string> Run(string input)
+    {
+        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var list = lines.Select(line => line.Split(",")).Select(line => (int.Parse(line[0]), line[1])).ToList();
+
+        var participants = new List<PersonResults>();
+
+        foreach (var item in list)
+        {
+            var result = new PersonResults(item.Item2, item.Item1);
+            participants.Add(result);
+        }
+
+        if (participants.Count <= 1)
+        {
+            Console.WriteLine("Not enough participants to play the game.");
+            return new List<string>();
+        }
+
+        // Begin rounds
+        bool gameOver = false;
+        int round = 1;
+        var winners = new List<PersonResults>();
+        var losers = new List<PersonResults>();
+        var maxRoll = 0;
+
+        var summary = new List<string>();
+
+        while (!gameOver)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Round {round} Participants:");
+            foreach (var result in participants)
+            {
+                Console.WriteLine(result);
+
+                if (result.MaxRoll > maxRoll)
+                {
+                    // move winners to losers
+                    losers.AddRange(winners);
+                    winners.Clear();
+
+                    // add new winner
+                    winners.Add(result);
+                    maxRoll = result.MaxRoll;
+                }
+                else if (result.MaxRoll == maxRoll)
+                {
+                    // add new winner
+                    winners.Add(result);
+                }
+                else
+                {
+                    // add new loser
+                    losers.Add(result);
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Round {round} Winners:");
+            foreach (var winner in winners)
+            {
+                Console.WriteLine(winner);
+            }
+            Console.WriteLine();
+            Console.WriteLine($"Round {round} Losers:");
+            foreach (var loser in losers)
+            {
+                summary.Add($"{loser.Name} was eliminated in round {round}.");
+                Console.WriteLine(loser);
+            }
+
+            // The game is over when there's only 1 winner
+            gameOver = winners.Count == 1;
+
+            if (!gameOver)
+            {
+                // Copy winners to participants
+                participants.Clear();
+                foreach (var winner in winners)
+                {
+                    participants.Add(new PersonResults(winner));
+                }
+                winners.Clear();
+                losers.Clear();
+                maxRoll = 0;
+
+                round++;
+            }
+        }
+
+        summary.Add($"{winners[0].Name} is the winner!");
+
+        Console.WriteLine();
+        Console.WriteLine("****************************************");
+        foreach (var line in summary)
+        {
+            Console.WriteLine(line);
+        }
+
+        return summary;
+    }
+
+    public record PersonResults
+    {
+        public string Name { get; init; }
+        public int NumberOfRolls { get; init; }
+        public int[] Rolls { get; init; }
+        public int MaxRoll { get; init; }
+
+        public PersonResults(string name, int numberOfRolls)
+        {
+            Name = name;
+            NumberOfRolls = numberOfRolls;
+
+            // generate an array of random rolls from 1-6
+            var random = new Random();
+            var rolls = new int[numberOfRolls];
+            var maxRoll = 0;
+
+            for (int i = 0; i < numberOfRolls; i++)
+            {
+                rolls[i] = random.Next(1, 7);
+                if (rolls[i] > maxRoll)
+                {
+                    maxRoll = rolls[i];
+                }
+            }
+
+            Rolls = rolls;
+            MaxRoll = maxRoll;
+        }
+
+        public PersonResults(PersonResults personResults)
+        {
+            Name = personResults.Name;
+            NumberOfRolls = personResults.NumberOfRolls;
+
+            // generate an array of random rolls from 1-6
+            var random = new Random();
+            var rolls = new int[personResults.NumberOfRolls];
+            var maxRoll = 0;
+
+            for (int i = 0; i < personResults.NumberOfRolls; i++)
+            {
+                rolls[i] = random.Next(1, 7);
+                if (rolls[i] > maxRoll)
+                {
+                    maxRoll = rolls[i];
+                }
+            }
+
+            Rolls = rolls;
+            MaxRoll = maxRoll;
+        }
+
+        public override string ToString()
+        {
+            return $"{Name,-30}, # Rolls {NumberOfRolls,2}, Max Roll {MaxRoll} : {string.Join(" ", Rolls)}";
+        }
+    }
+}
