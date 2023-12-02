@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "lotto",
   "resources": {
-    "hash": "sha256-SkImPLPB33RZBS3UQT4aA3mB0DFl/NSwDI1v5Q4OtKI=",
+    "hash": "sha256-9TkdDxN9FLN+gZQSZX0I7a9RcNxZ3RUOQWsyQVFJDBE=",
     "jsModuleNative": {
       "dotnet.native.8.0.0.45ykigla5r.js": "sha256-LjLDIz9+J7uuiwMlQ4HbNx2BnSpphOtO2MwkoI28vdI="
     },
@@ -17,7 +17,7 @@
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "lotto.wasm": "sha256-b7utVvgoIA5ZIe6IPxmNRRlnO/4bNv7rOeT7hpClxB4=",
+      "lotto.wasm": "sha256-HwvKDNi8FRGONYkbFHqZsOpb6F18OkokutUFs45Xy24=",
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-L3z9gLy453ChDsq4RXjjKDg5IncprVXlOCxwTUv0LPc=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-qjYSKLIM0Cu4F0t9afEh2L3/T8iN2cnYDfkw3NpsPAA=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-iIjeaVgc1nUQdgQvRdDadhoAV7Pvhi1AdnRwXBniS7c=",
