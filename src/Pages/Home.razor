@@ -5,6 +5,7 @@
 <h1>Lottery</h1>
 
 <p>Add lottery participants below:</p>
+<p># tickets,Name</p>
 <p>Example:
 <pre>
 1,Bilbo
@@ -143,6 +144,7 @@
 
     public record PersonResults
     {
+        public const int DieSides = 100;
         public string Name { get; init; }
         public int NumberOfRolls { get; init; }
         public int[] Rolls { get; init; }
@@ -153,14 +155,14 @@
             Name = name;
             NumberOfRolls = numberOfRolls;
 
-            // generate an array of random rolls from 1-6
+            // generate an array of random rolls from 1 to DiceSides
             var random = new Random();
             var rolls = new int[numberOfRolls];
             var maxRoll = 0;
 
             for (int i = 0; i < numberOfRolls; i++)
             {
-                rolls[i] = random.Next(1, 7);
+                rolls[i] = random.Next(1, DieSides + 1);
                 if (rolls[i] > maxRoll)
                 {
                     maxRoll = rolls[i];
@@ -176,14 +178,14 @@
             Name = personResults.Name;
             NumberOfRolls = personResults.NumberOfRolls;
 
-            // generate an array of random rolls from 1-6
+            // generate an array of random rolls from 1 to DiceSides
             var random = new Random();
             var rolls = new int[personResults.NumberOfRolls];
             var maxRoll = 0;
 
             for (int i = 0; i < personResults.NumberOfRolls; i++)
             {
-                rolls[i] = random.Next(1, 7);
+                rolls[i] = random.Next(1, DieSides + 1);
                 if (rolls[i] > maxRoll)
                 {
                     maxRoll = rolls[i];
